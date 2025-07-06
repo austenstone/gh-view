@@ -6,6 +6,7 @@ import { useWebhookRealtime } from '@/lib/webhook-realtime'
 import WebhookList from '@/components/webhook-list'
 import WebhookDetail from '@/components/webhook-detail'
 import WebhookStats from '@/components/webhook-stats'
+import { Box, Heading, Text, Grid, Stack } from '@primer/react-brand'
 
 export default function WebhookDashboard() {
   const [selectedWebhook, setSelectedWebhook] = useState<WebhookRow | null>(null)
@@ -31,47 +32,46 @@ export default function WebhookDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="max-w-7xl mx-auto">
+    <Box padding={32}>
+      <Stack gap={48}>
         {/* Header */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Webhooks</h1>
-              <div className="flex items-center gap-2 mt-2">
-                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
-                <span className="text-sm text-gray-600">
-                  {isConnected ? 'Connected' : 'Connecting...'}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2">
-            </div>
-          </div>
-        </div>
+        <Box>
+          <Heading size="1" as="h1">
+            Webhooks
+          </Heading>
+          <Stack direction="horizontal" gap={8} alignItems="center">
+            <Text size="200" variant="muted">
+              {isConnected ? '🟢 Connected' : '🔴 Connecting...'}
+            </Text>
+          </Stack>
+        </Box>
 
         {/* Stats */}
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Statistics</h2>
-        <WebhookStats webhooks={webhooks} stats={stats} />
+        <Box>
+          <Heading size="3" as="h2">
+            Statistics
+          </Heading>
+          <WebhookStats webhooks={webhooks} stats={stats} />
+        </Box>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div>
+        <Grid fullWidth>
+          <Grid.Column span={6}>
             <WebhookList
               webhooks={webhooks}
               onWebhookSelect={setSelectedWebhook}
               selectedWebhook={selectedWebhook}
             />
-          </div>
-          <div>
+          </Grid.Column>
+          <Grid.Column span={6}>
             <WebhookDetail
               webhook={selectedWebhook}
               onClose={() => setSelectedWebhook(null)}
               onMarkProcessed={handleMarkProcessed}
             />
-          </div>
-        </div>
-      </div>
-    </div>
+          </Grid.Column>
+        </Grid>
+      </Stack>
+    </Box>
   )
 }
