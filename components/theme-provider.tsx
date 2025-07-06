@@ -1,7 +1,6 @@
 'use client'
 
-import { ThemeProvider } from '@primer/react-brand'
-import { PageLayout, Box, BaseStyles } from '@primer/react'
+import { PageLayout, Box } from '@primer/react'
 import Navigation from './navigation'
 
 interface ClientThemeProviderProps {
@@ -10,8 +9,7 @@ interface ClientThemeProviderProps {
 
 export default function ClientThemeProvider({ children }: ClientThemeProviderProps) {
   return (
-    <ThemeProvider>
-      <BaseStyles>
+    <>
       <Box
         sx={{
           position: 'sticky',
@@ -22,35 +20,15 @@ export default function ClientThemeProvider({ children }: ClientThemeProviderPro
       </Box>
       <PageLayout rowGap="none" columnGap="none" padding="none" containerWidth="full">
         {/* <PageLayout.Header>
-          <Placeholder height={64}>Header</Placeholder>
-        </PageLayout.Header> */}
+                        <Placeholder height={64}>Header</Placeholder>
+                      </PageLayout.Header> */}
         <PageLayout.Content padding="normal">
           {children}
         </PageLayout.Content>
-        <PageLayout.Footer>
-          <Placeholder height={64}>Footer</Placeholder>
-        </PageLayout.Footer>
+        {/* <PageLayout.Footer>
+                          <Placeholder height={64}>Footer</Placeholder>
+                        </PageLayout.Footer> */}
       </PageLayout>
-      </BaseStyles>
-    </ThemeProvider>
-  )
-}
-
-function Placeholder({ height, children }: { height: number | string; children: React.ReactNode }) {
-  return (
-    <Box
-      sx={{
-        width: '100%',
-        height,
-        display: 'grid',
-        placeItems: 'center',
-        bg: 'canvas.inset',
-        borderRadius: 2,
-        border: '1px solid',
-        borderColor: 'border.subtle',
-      }}
-    >
-      {children}
-    </Box>
+    </>
   )
 }

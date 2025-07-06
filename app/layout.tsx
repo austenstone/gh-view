@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "@primer/react-brand/lib/css/main.css";
 import "@primer/react-brand/fonts/fonts.css";
+import { BaseStyles, Box, PageLayout, ThemeProvider } from '@primer/react'
+import { StyledComponentsRegistry } from './registry'
 import Navigation from "@/components/navigation";
 import ClientThemeProvider from "@/components/theme-provider";
 
@@ -16,11 +18,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // Note: the focus-visible polyfill adds additional attributes to `html`
+    // that cause hydration mismatch errors
+    <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
-        <ClientThemeProvider>
-          {children}
-        </ClientThemeProvider>
+        <StyledComponentsRegistry>
+          <ThemeProvider>
+            <BaseStyles>
+              <ClientThemeProvider>{children}</ClientThemeProvider>
+            </BaseStyles>
+          </ThemeProvider>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );
