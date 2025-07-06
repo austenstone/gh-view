@@ -31,19 +31,6 @@ export default function WebhookDetail({
     return new Date(timestamp).toLocaleString()
   }
 
-  const getEventColor = (event: string): string => {
-    const colors: Record<string, string> = {
-      'push': '#0366d6',
-      'pull_request': '#28a745',
-      'issues': '#ffd33d',
-      'release': '#6f42c1',
-      'star': '#fb8500',
-      'fork': '#e36209',
-      'watch': '#6a737d'
-    }
-    return colors[event] || '#6a737d'
-  }
-
   return (
     <Box backgroundColor="default" borderRadius="medium" padding="normal">
       <Stack gap={24}>

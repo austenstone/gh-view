@@ -1,7 +1,7 @@
 'use client'
 
 import { ThemeProvider } from '@primer/react-brand'
-import { PageLayout, Box } from '@primer/react'
+import { PageLayout, Box, BaseStyles } from '@primer/react'
 import Navigation from './navigation'
 
 interface ClientThemeProviderProps {
@@ -11,6 +11,7 @@ interface ClientThemeProviderProps {
 export default function ClientThemeProvider({ children }: ClientThemeProviderProps) {
   return (
     <ThemeProvider>
+      <BaseStyles>
       <Box
         sx={{
           position: 'sticky',
@@ -30,6 +31,7 @@ export default function ClientThemeProvider({ children }: ClientThemeProviderPro
           <Placeholder height={64}>Footer</Placeholder>
         </PageLayout.Footer>
       </PageLayout>
+      </BaseStyles>
     </ThemeProvider>
   )
 }
