@@ -21,103 +21,85 @@ export default function WebhookStats({ webhooks, stats }: WebhookStatsProps) {
   }
 
   return (
-    <Box>      
-      <Grid fullWidth>
-        <Grid.Column span={3}>
-          <Statistic variant="boxed">
-            <Statistic.Heading>
-              {stats.total}
-            </Statistic.Heading>
-            <Statistic.Description>
-              Total Webhooks
-            </Statistic.Description>
-          </Statistic>
-        </Grid.Column>
-        
-        <Grid.Column span={3}>
-          <Statistic variant="boxed">
-            <Statistic.Heading>
-              {stats.recentCount}
-            </Statistic.Heading>
-            <Statistic.Description>
-              Last Hour
-            </Statistic.Description>
-          </Statistic>
-        </Grid.Column>
-        
-        <Grid.Column span={3}>
-          <Statistic variant="boxed">
-            <Statistic.Heading>
-              {getTopEvents()[0]?.[1] || 0}
-            </Statistic.Heading>
-            <Statistic.Description>
-              Most Active
-            </Statistic.Description>
-          </Statistic>
-        </Grid.Column>
-        
-        <Grid.Column span={3}>
-          <Statistic variant="boxed">
-            <Statistic.Heading>
-              {Object.keys(stats.events).length}
-            </Statistic.Heading>
-            <Statistic.Description>
-              Event Types
-            </Statistic.Description>
-          </Statistic>
-        </Grid.Column>
-      </Grid>
+    <Box>
+      <Stack direction={{ narrow: 'vertical', regular: 'horizontal' }} padding="none">
+        <Statistic padding="condensed">
+          <Statistic.Heading>
+            {stats.total}
+          </Statistic.Heading>
+          <Statistic.Description>
+            Total Webhooks
+          </Statistic.Description>
+        </Statistic>
 
-      <Box padding={48}>
-        <Grid fullWidth>
-          <Grid.Column span={6}>
-            <Box backgroundColor="subtle" padding="normal" borderRadius="medium">
-              <Stack gap={16}>
-                <Heading size="4">Top Events</Heading>
-                <Stack gap={16}>
-                  {getTopEvents().map(([event, count]) => (
-                    <Stack key={event} direction="horizontal" justifyContent="space-between" alignItems="center">
-                      <Text size="200">{event}</Text>
-                      <Text size="200" weight="semibold">{count}</Text>
-                    </Stack>
-                  ))}
-                  {getTopEvents().length === 0 && (
-                    <Text size="200" variant="muted">No events yet</Text>
-                  )}
-                </Stack>
-              </Stack>
-            </Box>
-          </Grid.Column>
+        <Statistic padding="condensed">
+          <Statistic.Heading>
+            {stats.recentCount}
+          </Statistic.Heading>
+          <Statistic.Description>
+            Last Hour
+          </Statistic.Description>
+        </Statistic>
 
-          <Grid.Column span={6}>
-            <Box backgroundColor="subtle" padding="normal" borderRadius="medium">
-              <Stack gap={16}>
-                <Heading size="4">Recent Activity</Heading>
-                <Stack gap={16}>
-                  {getRecentActivity().map((item) => (
-                    <Stack key={item.id} direction="horizontal" justifyContent="space-between" alignItems="center">
-                      <Stack gap={4}>
-                        <Text size="200">{item.event_type}</Text>
-                        {item.repository && (
-                          <Text size="100" variant="muted">
-                            {item.repository}
-                          </Text>
-                        )}
-                      </Stack>
-                      <Text size="100" variant="muted">
-                        {new Date(item.created_at).toLocaleTimeString()}
-                      </Text>
-                    </Stack>
-                  ))}
-                  {getRecentActivity().length === 0 && (
-                    <Text size="200" variant="muted">No recent activity</Text>
-                  )}
-                </Stack>
+        <Statistic padding="condensed">
+          <Statistic.Heading>
+            {getTopEvents()[0]?.[1] || 0}
+          </Statistic.Heading>
+          <Statistic.Description>
+            Most Active
+          </Statistic.Description>
+        </Statistic>
+
+        <Statistic padding="condensed">
+          <Statistic.Heading>
+            {Object.keys(stats.events).length}
+          </Statistic.Heading>
+          <Statistic.Description>
+            Event Types
+          </Statistic.Description>
+        </Statistic>
+      </Stack>
+
+      <Box backgroundColor="subtle" padding="none" borderRadius="medium">
+        <Stack gap={16}>
+          <Heading size="4">Top Events</Heading>
+          <Stack gap={16}>
+            {getTopEvents().map(([event, count]) => (
+              <Stack key={event} direction="horizontal" justifyContent="space-between" alignItems="center">
+                <Text size="200">{event}</Text>
+                <Text size="200" weight="semibold">{count}</Text>
               </Stack>
-            </Box>
-          </Grid.Column>
-        </Grid>
+            ))}
+            {getTopEvents().length === 0 && (
+              <Text size="200" variant="muted">No events yet</Text>
+            )}
+          </Stack>
+        </Stack>
       </Box>
+
+      <Stack gap={16}>
+        <Heading size="4">Recent Activity</Heading>
+        <Stack gap={16}>
+          {getRecentActivity().map((item) => (
+            <Stack key={item.id} direction="horizontal" justifyContent="space-between" alignItems="center">
+              <Stack gap={4}>
+                <Text size="200">{item.event_type}</Text>
+                {item.repository && (
+                  <Text size="100" variant="muted">
+                    {item.repository}
+                  </Text>
+                )}
+              </Stack>
+              <Text size="100" variant="muted">
+                {new Date(item.created_at).toLocaleTimeString()}
+              </Text>
+            </Stack>
+          ))}
+          {getRecentActivity().length === 0 && (
+            <Text size="200" variant="muted">No recent activity</Text>
+          )}
+        </Stack>
+      </Stack>
     </Box>
   )
 }

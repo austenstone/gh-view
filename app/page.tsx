@@ -6,7 +6,7 @@ import Link from 'next/link'
 export default function Home() {
   return (
     <Box>
-      <Hero>
+      <Hero align="center">
         <Hero.Heading>
           GitHub View
         </Hero.Heading>

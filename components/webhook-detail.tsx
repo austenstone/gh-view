@@ -53,16 +53,7 @@ export default function WebhookDetail({
               Webhook Details
             </Heading>
             <Stack direction="horizontal" gap={8} alignItems="center">
-              <Label 
-                size="small"
-                style={{ 
-                  backgroundColor: getEventColor(webhook.event_type),
-                  color: 'white',
-                  padding: '2px 6px',
-                  borderRadius: '12px',
-                  fontSize: '11px'
-                }}
-              >
+              <Label>
                 {webhook.event_type}
               </Label>
               {webhook.repository && (
