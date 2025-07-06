@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "@primer/react-brand/lib/css/main.css";
+import "@primer/react-brand/fonts/fonts.css";
 import Navigation from "@/components/navigation";
+import ClientThemeProvider from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,8 +31,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navigation />
-        {children}
+        <ClientThemeProvider>
+          <Navigation />
+          {children}
+        </ClientThemeProvider>
       </body>
     </html>
   );
