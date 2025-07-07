@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation'
 import { SubdomainNavBar } from '@primer/react-brand'
-
 export default function Navigation() {
   const pathname = usePathname()
 

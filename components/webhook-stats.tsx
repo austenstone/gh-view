@@ -59,47 +59,6 @@ export default function WebhookStats({ webhooks, stats }: WebhookStatsProps) {
           </Statistic.Description>
         </Statistic>
       </Stack>
-
-      <Box backgroundColor="subtle" padding="none" borderRadius="medium">
-        <Stack gap={16}>
-          <Heading size="4">Top Events</Heading>
-          <Stack gap={16}>
-            {getTopEvents().map(([event, count]) => (
-              <Stack key={event} direction="horizontal" justifyContent="space-between" alignItems="center">
-                <Text size="200">{event}</Text>
-                <Text size="200" weight="semibold">{count}</Text>
-              </Stack>
-            ))}
-            {getTopEvents().length === 0 && (
-              <Text size="200" variant="muted">No events yet</Text>
-            )}
-          </Stack>
-        </Stack>
-      </Box>
-
-      <Stack gap={16}>
-        <Heading size="4">Recent Activity</Heading>
-        <Stack gap={16}>
-          {getRecentActivity().map((item) => (
-            <Stack key={item.id} direction="horizontal" justifyContent="space-between" alignItems="center">
-              <Stack gap={4}>
-                <Text size="200">{item.event_type}</Text>
-                {item.repository && (
-                  <Text size="100" variant="muted">
-                    {item.repository}
-                  </Text>
-                )}
-              </Stack>
-              <Text size="100" variant="muted">
-                {new Date(item.created_at).toLocaleTimeString()}
-              </Text>
-            </Stack>
-          ))}
-          {getRecentActivity().length === 0 && (
-            <Text size="200" variant="muted">No recent activity</Text>
-          )}
-        </Stack>
-      </Stack>
     </Box>
   )
 }

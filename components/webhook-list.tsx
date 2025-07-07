@@ -1,137 +1,106 @@
 'use client'
 
-import { useState } from 'react'
 import { WebhookRow } from '@/lib/supabase'
-import { Box, Heading, Text, Stack, TextInput, Select, Label } from '@primer/react-brand'
+import { WebhookFilters } from '@/lib/webhook-filters'
+import { Box, Heading, Text, Stack, Label } from '@primer/react'
 
 interface WebhookListProps {
   webhooks: WebhookRow[]
   onWebhookSelect: (webhook: WebhookRow) => void
   selectedWebhook?: WebhookRow | null
+  filters: WebhookFilters
+  onFiltersChange: (filters: WebhookFilters) => void
+  loading?: boolean
 }
 
 export default function WebhookList({ 
   webhooks, 
   onWebhookSelect, 
-  selectedWebhook
+  selectedWebhook,
+  filters,
+  loading = false
 }: WebhookListProps) {
-  const [filter, setFilter] = useState('')
-  const [eventFilter, setEventFilter] = useState('')
-
-  const filteredWebhooks = webhooks.filter(webhook => {
-    const matchesFilter = webhook.github_id.toLowerCase().includes(filter.toLowerCase()) ||
-                         webhook.event_type.toLowerCase().includes(filter.toLowerCase()) ||
-                         (webhook.repository && webhook.repository.toLowerCase().includes(filter.toLowerCase()))
-    const matchesEvent = eventFilter === '' || webhook.event_type === eventFilter
-    return matchesFilter && matchesEvent
-  })
-
-  const uniqueEvents = [...new Set(webhooks.map(w => w.event_type))]
-
   const formatTime = (timestamp: string) => {
     return new Date(timestamp).toLocaleString()
   }
 
   return (
-    <Box backgroundColor="default" borderRadius="medium" padding="normal">
-      <Stack gap={24}>
-        <Stack direction="horizontal" justifyContent="space-between" alignItems="center">
-          <Heading size="4">Webhook Deliveries</Heading>
-          <Text size="100" variant="muted">
-            {filteredWebhooks.length} of {webhooks.length} webhooks
-          </Text>
-        </Stack>
-        
-        <Stack gap={16} direction="horizontal">
-          <Box style={{ flex: 1 }}>
-            <TextInput
-              placeholder="Filter by ID, event, or repository..."
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              fullWidth
-            />
-          </Box>
-          <Box>
-            <Select
-              value={eventFilter}
-              onChange={(e) => setEventFilter(e.target.value)}
-            >
-              <Select.Option value="">All Events</Select.Option>
-              {uniqueEvents.map(event => (
-                <Select.Option key={event} value={event}>{event}</Select.Option>
-              ))}
-            </Select>
-          </Box>
-        </Stack>
+      <Box p={4} borderWidth="1px" borderStyle="solid" borderColor="border.default" borderRadius={2}>
+        <Stack gap="normal">
+          <Stack direction="horizontal" justifyContent="space-between" alignItems="center">
+            <Heading as="h3">Webhook Deliveries</Heading>
+            <Text fontSize={14} color="fg.muted">
+              {loading ? 'Loading...' : `${webhooks.length} webhook${webhooks.length !== 1 ? 's' : ''}`}
+            </Text>
+          </Stack>
 
-        <Box style={{ maxHeight: '400px', overflowY: 'auto' }}>
-          {filteredWebhooks.length === 0 ? (
-            <Box padding="spacious" style={{ textAlign: 'center' }}>
-              {webhooks.length === 0 ? (
-                <Stack gap={8} alignItems="center">
-                  <Text size="300">No webhooks yet</Text>
-                  <Text size="200" variant="muted">Webhooks will appear here when they&apos;re received</Text>
+          <Box style={{ maxHeight: '500px', overflowY: 'auto' }}>
+            {loading ? (
+              <Box p={4} sx={{ textAlign: 'center' }}>
+                <Text>Loading webhooks...</Text>
+              </Box>
+            ) : webhooks.length === 0 ? (
+              <Box p={4} sx={{ textAlign: 'center' }}>
+                <Stack gap="condensed" alignItems="center">
+                  <Text fontSize={16}>No webhooks found</Text>
+                  <Text fontSize={14} color="fg.muted">
+                    {Object.values(filters).some(f => Array.isArray(f) ? f.length > 0 : f) 
+                      ? 'Try adjusting your filters'
+                      : 'Webhooks will appear here when they are received'
+                    }
+                  </Text>
                 </Stack>
-              ) : (
-                <Text size="300" variant="muted">No webhooks match your filters</Text>
-              )}
-            </Box>
-          ) : (
-            <Stack gap="none">
-              {filteredWebhooks.map((webhook) => (
-                <Box
-                  key={webhook.id}
-                  onClick={() => onWebhookSelect(webhook)}
-                  padding="normal"
-                  backgroundColor={selectedWebhook?.id === webhook.id ? 'subtle' : 'default'}
-                  style={{ 
-                    cursor: 'pointer',
-                    borderLeft: selectedWebhook?.id === webhook.id ? '4px solid #0366d6' : 'none',
-                    transition: 'background-color 0.2s'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (selectedWebhook?.id !== webhook.id) {
-                      e.currentTarget.style.backgroundColor = 'var(--brand-color-canvas-subtle)'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (selectedWebhook?.id !== webhook.id) {
-                      e.currentTarget.style.backgroundColor = 'transparent'
-                    }
-                  }}
-                >
-                  <Stack direction="horizontal" justifyContent="space-between" alignItems="flex-start">
-                    <Stack gap={8} style={{ flex: 1 }}>
-                      <Stack direction="horizontal" gap={8} alignItems="center">
-                        <Label>
-                          {webhook.event_type}
-                        </Label>
-                        {webhook.repository && (
-                          <Text size="100" variant="muted">
-                            {webhook.repository}
+              </Box>
+            ) : (
+              <Stack gap="none">
+                {webhooks.map((webhook) => (
+                  <Box
+                    key={webhook.id}
+                    onClick={() => onWebhookSelect(webhook)}
+                    p={3}
+                    sx={{
+                      cursor: 'pointer',
+                      borderRadius: 2,
+                      borderLeft: selectedWebhook?.id === webhook.id ? '4px solid' : 'none',
+                      borderColor: selectedWebhook?.id === webhook.id ? 'accent.emphasis' : 'transparent',
+                      backgroundColor: selectedWebhook?.id === webhook.id ? 'accent.subtle' : 'transparent',
+                      '&:hover': {
+                        backgroundColor: selectedWebhook?.id === webhook.id ? 'accent.subtle' : 'canvas.subtle'
+                      }
+                    }}
+                  >
+                    <Stack direction="horizontal" justifyContent="space-between" alignItems="flex-start">
+                      <Stack gap="condensed" style={{ flex: 1 }}>
+                        <Stack direction="horizontal" gap="condensed" alignItems="center">
+                          <Label>
+                            {webhook.event_type}
+                          </Label>
+                          {webhook.repository && (
+                            <Text fontSize={12} color="fg.muted">
+                              {webhook.repository}
+                            </Text>
+                          )}
+                        </Stack>
+                        <Text fontSize={14} color="fg.muted">
+                          ID: {webhook.github_id}
+                        </Text>
+                        <Text fontSize={12} color="fg.muted">
+                          {formatTime(webhook.created_at)}
+                        </Text>
+                        {webhook.sender && (
+                          <Text fontSize={12} color="fg.muted">
+                            by {webhook.sender}
                           </Text>
                         )}
                       </Stack>
-                      <Text size="200" variant="muted">
-                        ID: {webhook.github_id}
-                      </Text>
-                      <Text size="100" variant="muted">
-                        {formatTime(webhook.created_at)}
-                      </Text>
-                      {webhook.sender && (
-                        <Text size="100" variant="muted">
-                          by {webhook.sender}
-                        </Text>
-                      )}
+                      <Text fontSize={14} color="fg.muted">→</Text>
                     </Stack>
-                    <Text size="200" variant="muted">→</Text>
-                  </Stack>
-                </Box>
-              ))}
-            </Stack>
-          )}
-        </Box>
-      </Stack>
-    </Box>
+                  </Box>
+                ))}
+              </Stack>
+            )}
+          </Box>
+        </Stack>
+      </Box>
   )
 }

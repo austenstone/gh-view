@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Autocomplete, FormControl, TextInputWithTokens } from '@primer/react'
+import { Autocomplete, FormControl, TextInput, TextInputWithTokens } from '@primer/react'
 
 export interface AutocompleteItem {
   text: string
@@ -128,9 +128,10 @@ export default function MultiSelectAutocomplete({
       </FormControl.Label>
       
       {helperText && (
-        <div style={{ fontSize: '12px', color: '#656d76', marginTop: '4px' }}>
-          {helperText}
-        </div>
+        <FormControl.Caption>{helperText}</FormControl.Caption>
+        // <div style={{ fontSize: '12px', color: '#656d76', marginTop: '4px' }}>
+        //   {helperText}
+        // </div>
       )}
       
       <Autocomplete>
